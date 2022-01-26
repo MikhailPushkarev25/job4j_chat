@@ -2,6 +2,7 @@ package ru.job4j.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,13 +17,18 @@ public class Message {
 
     private Timestamp created;
 
+    @OneToOne
+    @JoinColumn(name = "room_id")
+    private Room rooms;
+
     public Message() {
     }
 
-    public static Message of(String description) {
+    public static Message of(String description, Room rooms) {
         Message message = new Message();
         message.description = description;
         message.created = new Timestamp(System.currentTimeMillis());
+        message.rooms = rooms;
         return message;
     }
 
@@ -40,6 +46,22 @@ public class Message {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public Room getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(Room rooms) {
+        this.rooms = rooms;
     }
 
     @Override
