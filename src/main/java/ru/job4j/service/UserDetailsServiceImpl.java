@@ -11,7 +11,7 @@ import static java.util.Collections.emptyList;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private UserRepository users;
+    private final UserRepository users;
 
     public UserDetailsServiceImpl(UserRepository users) {
         this.users = users;
