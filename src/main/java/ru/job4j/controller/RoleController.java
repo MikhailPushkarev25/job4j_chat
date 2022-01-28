@@ -1,12 +1,15 @@
 package ru.job4j.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.MultiValueMapAdapter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.model.Role;
+import ru.job4j.model.User;
 import ru.job4j.repository.RoleRepository;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -29,24 +32,27 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Role> findById(@PathVariable int id) {
-        var roles = this.roles.findById(id);
-        roles.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "ResponseStatusException in findByIdRolesController"));
-        return new ResponseEntity<>(
-                roles.orElse(new Role()),
-                HttpStatus.OK
-        );
+    public ResponseEntity<?> findById(@PathVariable int id) {
+        return ResponseEntity.of(Optional.of(new HashSet<>() {{
+            add(roles.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "ResponseStatusException in findByIdRoleController")));
+        }}));
+
     }
 
     @PostMapping("/")
-    public ResponseEntity<Role> create(@RequestBody Role role) {
+    public ResponseEntity<?> create(@RequestBody Role role) {
         if (role.getRoles() == null || role.getId() == 0) {
             throw new NullPointerException("Role and id mustn't be empty");
         }
-        return new ResponseEntity<>(
-                this.roles.save(role),
-                HttpStatus.CREATED
+        Object body = new HashSet<>() {{
+            add(roles.save(role));
+        }};
+
+        return new ResponseEntity(
+              body,
+              new MultiValueMapAdapter<>(Map.of("Job4jCostumHeader", List.of("job4j"))),
+                HttpStatus.OK
         );
     }
 
