@@ -9,6 +9,10 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class Job4jChatApplication {
 
+    public static void main(String[] args) {
+        SpringApplication.run(Job4jChatApplication.class, args);
+    }
+
     @Bean
     public RestTemplate getTemplate() {
         return new RestTemplate();
@@ -17,10 +21,6 @@ public class Job4jChatApplication {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(Job4jChatApplication.class, args);
     }
 
 }
