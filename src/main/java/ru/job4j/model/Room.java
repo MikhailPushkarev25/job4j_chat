@@ -1,6 +1,8 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,8 +12,9 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "id not found Room")
     private int id;
-
+    @NotBlank(message = "line not found")
     private String names;
 
     public Room() {

@@ -8,6 +8,7 @@ import ru.job4j.model.Message;
 import ru.job4j.model.User;
 import ru.job4j.repository.MessageRepository;
 
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class MessageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Message> findById(@PathVariable int id) {
+    public ResponseEntity<Message> findById(@Valid @PathVariable int id) {
         var message = this.messages.findById(id);
         message.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "ResponseStatusException in findByIdMessageController"));
@@ -44,7 +45,7 @@ public class MessageController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Message> create(@RequestBody Message message) {
+    public ResponseEntity<Message> create(@Valid @RequestBody Message message) {
         if (message.getDescription() == null || message.getId() == 0) {
             throw new NullPointerException("Message and id mustn't be empty");
         }
@@ -55,13 +56,13 @@ public class MessageController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Message message) {
+    public ResponseEntity<Void> update(@Valid @RequestBody Message message) {
         this.messages.save(message);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@Valid @PathVariable int id) {
         Message message = new Message();
         if (message.getId() == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -73,7 +74,7 @@ public class MessageController {
     }
 
     @PatchMapping("/massagePatch")
-    public ResponseEntity<Message> patchUser(@RequestBody Message message) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<Message> patchUser(@Valid @RequestBody Message message) throws InvocationTargetException, IllegalAccessException {
         var current = messages.findById(message.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 

@@ -9,6 +9,7 @@ import ru.job4j.model.Role;
 import ru.job4j.model.User;
 import ru.job4j.repository.RoleRepository;
 
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -34,7 +35,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable int id) {
+    public ResponseEntity<?> findById(@Valid @PathVariable int id) {
         return ResponseEntity.of(Optional.of(new HashSet<>() {{
             add(roles.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "ResponseStatusException in findByIdRoleController")));
@@ -43,7 +44,7 @@ public class RoleController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody Role role) {
+    public ResponseEntity<?> create(@Valid @RequestBody Role role) {
         if (role.getRoles() == null || role.getId() == 0) {
             throw new NullPointerException("Role and id mustn't be empty");
         }
@@ -59,13 +60,13 @@ public class RoleController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Role role) {
+    public ResponseEntity<Void> update(@Valid @RequestBody Role role) {
                 this.roles.save(role);
                return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@Valid @PathVariable int id) {
         Role role = new Role();
         if (role.getId() == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -77,7 +78,7 @@ public class RoleController {
     }
 
     @PatchMapping("/rolePatch")
-    public ResponseEntity<Role> patchUser(@RequestBody Role role) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<Role> patchUser(@Valid @RequestBody Role role) throws InvocationTargetException, IllegalAccessException {
         var current = roles.findById(role.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 

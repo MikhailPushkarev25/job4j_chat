@@ -1,6 +1,9 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
@@ -11,14 +14,16 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "filed id not fount Message")
     private int id;
-
+    @NotNull(message = "line not fount")
     private String description;
-
+    @FutureOrPresent(message = "date not future")
     private Timestamp created;
 
     @OneToOne
     @JoinColumn(name = "room_id")
+    @Valid
     private Room rooms;
 
     public Message() {

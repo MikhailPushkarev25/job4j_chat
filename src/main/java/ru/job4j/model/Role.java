@@ -1,6 +1,8 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -8,7 +10,9 @@ import java.util.Objects;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "filed id not found Role")
     private int id;
+    @NotBlank(message = "line not found")
     private String roles;
 
     public Role() {

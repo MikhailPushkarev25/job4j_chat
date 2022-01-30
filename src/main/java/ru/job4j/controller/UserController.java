@@ -13,6 +13,7 @@ import ru.job4j.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
         if (user.getId() == 0) {
             throw new IllegalArgumentException("User is missing");
         }
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable int id) {
+    public ResponseEntity<User> findById(@Valid @PathVariable int id) {
         var user = this.users.findById(id);
         user.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "ResponseStatusException in findByIdUserController"));
@@ -70,7 +71,7 @@ public class UserController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<User> update(@RequestBody User user) {
+    public ResponseEntity<User> update(@Valid @RequestBody User user) {
         return new ResponseEntity<>(
                 this.users.save(user),
                 HttpStatus.CREATED
@@ -78,7 +79,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@Valid @PathVariable int id) {
         User user = new User();
         if (user.getId() == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -90,7 +91,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody User user) {
+    public void signUp(@Valid @RequestBody User user) {
         if (user.getUsername() == null || user.getPassword() == null) {
             throw new NullPointerException("Username and password mustn't be empty");
         }
@@ -120,7 +121,7 @@ public class UserController {
     }
 
     @PatchMapping("/userPatch")
-    public ResponseEntity<User> patchUser(@RequestBody User user) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<User> patchUser(@Valid @RequestBody User user) throws InvocationTargetException, IllegalAccessException {
         var current = users.findById(user.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 

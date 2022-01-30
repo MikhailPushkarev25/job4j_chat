@@ -1,6 +1,9 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,15 +12,24 @@ import java.util.Objects;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "field id not found User")
     private int id;
+    @Size(min = 6, max = 50, message = "name is too long or short")
     private String username;
+    @Size(min = 5, message = "password is too short")
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
+    @Valid
     private Role role;
 
     public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public static User of(int id, String username, String password, Role role) {

@@ -1,4 +1,4 @@
-package ru.job4j.service;
+package ru.job4j;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -8,6 +8,7 @@ import ru.job4j.model.Room;
 import ru.job4j.model.User;
 import ru.job4j.repository.RoomRepository;
 
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Room> findById(@PathVariable int id) {
+    public ResponseEntity<Room> findById(@Valid @PathVariable int id) {
         var room = this.rooms.findById(id);
         room.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "ResponseStatusException in findByIdRoomController"));
@@ -44,7 +45,7 @@ public class RoomController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Room> create(@RequestBody Room room) {
+    public ResponseEntity<Room> create(@Valid @RequestBody Room room) {
         if (room.getNames() == null || room.getId() == 0) {
             throw new NullPointerException("Room and id mustn't be empty");
         }
@@ -55,13 +56,13 @@ public class RoomController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Room room) {
+    public ResponseEntity<Void> update(@Valid @RequestBody Room room) {
         this.rooms.save(room);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public  ResponseEntity<Void> delete(@PathVariable int id) {
+    public  ResponseEntity<Void> delete(@Valid @PathVariable int id) {
         Room room = new Room();
         if (room.getId() == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -73,7 +74,7 @@ public class RoomController {
     }
 
     @PatchMapping("/roomPatch")
-    public ResponseEntity<Room> patchUser(@RequestBody Room room) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<Room> patchUser(@Valid @RequestBody Room room) throws InvocationTargetException, IllegalAccessException {
         var current = rooms.findById(room.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
